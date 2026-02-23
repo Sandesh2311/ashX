@@ -10,7 +10,7 @@
 3. Configure:
    - Root Directory: `backend`
    - Build Command: `pip install -r requirements.txt`
-   - Start Command: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app`
+   - Start Command: `gunicorn -w 1 --threads 8 --bind 0.0.0.0:$PORT app:app`
 4. Add env var:
    - `SECRET_KEY` = a long random string
 5. Deploy and copy backend URL, for example:
@@ -40,3 +40,4 @@
 ## Notes
 - Current Vercel setup proxies all frontend paths to Render backend using `frontend/vercel.json`.
 - SQLite on Render is ephemeral unless you attach a persistent disk or migrate DB to a managed database.
+- Do not use eventlet worker on Render Python 3.14; use threaded gunicorn command above.
