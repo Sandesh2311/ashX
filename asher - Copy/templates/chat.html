@@ -1,0 +1,97 @@
+﻿{% extends "base.html" %}
+{% block title %}PulseChat{% endblock %}
+{% block head %}
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+{% endblock %}
+{% block body %}
+<div class="app-shell">
+  <aside class="glass sidebar">
+    <div class="sidebar-top">
+      <div class="me-block">
+        <img id="meAvatar" src="{{ me.avatar_url }}" alt="Me" class="avatar" />
+        <div>
+          <h3 id="meName">{{ me.username }}</h3>
+          <small class="status-dot online">Online</small>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <label class="theme-switch">
+          <input type="checkbox" id="themeToggle" />
+          <span class="slider"></span>
+        </label>
+        <button id="avatarBtn" class="icon-btn" title="Change avatar">📷</button>
+        <input type="file" id="avatarInput" accept="image/*" hidden>
+        <button id="installPwaBtn" class="icon-btn hidden" title="Install app">⬇</button>
+        <button id="notifBtn" class="icon-btn" title="Enable notifications">🔔</button>
+        <a href="{{ url_for('logout') }}" class="icon-btn" title="Logout">⎋</a>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="chatSearch" placeholder="Search chats" />
+    </div>
+
+    <div class="friend-wrap">
+      <input type="text" id="friendSearch" placeholder="Add friend by username/email" />
+      <button id="friendAddBtn" class="btn btn-primary">Add</button>
+    </div>
+
+    <div id="contactsList" class="contacts"></div>
+  </aside>
+
+  <section class="glass chat-panel">
+    <div class="chat-particles" aria-hidden="true"></div>
+    <header class="chat-header">
+      <div class="chat-contact" id="chatContact">
+        <img id="activeAvatar" src="" alt="Contact" class="avatar" />
+        <div>
+          <h3 id="activeName">Select a conversation</h3>
+          <small id="activeStatus" class="muted">Offline</small>
+        </div>
+      </div>
+      <div id="selectionBar" class="selection-bar hidden">
+        <span id="selectionCount">0 selected</span>
+        <button id="forwardSelectedBtn" class="icon-btn" title="Forward selected">↪</button>
+        <button id="deleteSelectedBtn" class="icon-btn" title="Delete selected">🗑</button>
+        <button id="clearSelectionBtn" class="icon-btn" title="Clear selection">✕</button>
+      </div>
+    </header>
+
+    <main id="messages" class="messages"></main>
+    <div id="dropZone" class="drop-zone hidden">Drop file to upload</div>
+
+    <div id="typingIndicator" class="typing-indicator hidden">
+      <span></span><span></span><span></span>
+      <small id="typingLabel" class="typing-label">Typing...</small>
+    </div>
+
+    <div id="replyPreview" class="reply-preview hidden"></div>
+    <div id="mediaPreview" class="media-preview hidden"></div>
+
+    <footer class="composer">
+      <button id="emojiBtn" class="icon-btn" title="Emoji">😊</button>
+      <div id="emojiPicker" class="emoji-picker hidden"></div>
+
+      <button id="mediaBtn" class="icon-btn" title="Send media">📎</button>
+      <input type="file" id="mediaInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.rar,.csv" hidden>
+      <button id="voiceBtn" class="icon-btn" title="Record voice">🎙</button>
+
+      <textarea id="messageInput" rows="1" placeholder="Type a message..."></textarea>
+      <button id="sendBtn" class="btn btn-primary">Send</button>
+    </footer>
+  </section>
+</div>
+
+<div id="lightbox" class="lightbox hidden">
+  <button id="lightboxClose" class="lightbox-close">✕</button>
+  <img id="lightboxImg" src="" alt="Preview">
+</div>
+
+<audio id="notifyAudio" preload="auto"></audio>
+<script>
+  window.APP_ME = {{ me | tojson }};
+</script>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

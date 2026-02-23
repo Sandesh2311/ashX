@@ -1,0 +1,23 @@
+{
+  "name": "AshX",
+  "short_name": "AshX",
+  "start_url": "/chat",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d1326",
+  "theme_color": "#1b9aaa",
+  "description": "Realtime messaging with offline support",
+  "icons": [
+    {
+      "src": "/static/images/ashx-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

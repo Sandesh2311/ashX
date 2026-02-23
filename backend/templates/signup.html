@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Signup | AshX{% endblock %}
+{% block body %}
+<main class="auth-shell">
+  <section class="glass auth-card">
+    <h1>Create Account</h1>
+    <p class="muted">Join AshX and start messaging instantly</p>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="POST" class="auth-form" id="signupForm">
+      <label>Username</label>
+      <input type="text" name="username" required minlength="3" maxlength="30" />
+      <label>Email</label>
+      <input type="email" name="email" required />
+      <label>Password</label>
+      <input type="password" name="password" required minlength="6" />
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    <p class="muted">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+  </section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

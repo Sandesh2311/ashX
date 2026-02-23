@@ -1,0 +1,140 @@
+﻿{% extends "base.html" %}
+{% block title %}AshX{% endblock %}
+{% block head %}
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+{% endblock %}
+{% block body %}
+<div class="app-shell">
+  <aside class="glass sidebar">
+    <div class="sidebar-top">
+      <div class="top-slider" id="topSlider">
+        <div class="brand-mark">
+          <img src="{{ url_for('static', filename='images/ashx-logo.png') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/icon.svg') }}';" alt="AshX logo" />
+          <span>AshX</span>
+        </div>
+        <div class="me-block">
+          <img id="meAvatar" src="{{ me.avatar_url }}" alt="Me" class="avatar" />
+          <div>
+            <h3 id="meName">{{ me.username }}</h3>
+            <small class="status-dot online">Online</small>
+          </div>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <label class="theme-switch">
+          <input type="checkbox" id="themeToggle" />
+          <span class="slider"></span>
+        </label>
+        <button id="avatarBtn" class="icon-btn" title="Change avatar">&#128247;</button>
+        <input type="file" id="avatarInput" accept="image/*" hidden>
+        <button id="installPwaBtn" class="icon-btn" title="Install app">&#11015;</button>
+        <button id="notifBtn" class="icon-btn" title="Enable notifications">&#128276;</button>
+        <a href="{{ url_for('logout') }}" class="icon-btn" title="Logout">&#9099;</a>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="chatSearch" placeholder="Search chats" />
+    </div>
+
+    <div class="friend-wrap">
+      <input type="text" id="friendSearch" placeholder="Add friend by username/email" />
+      <button id="friendAddBtn" class="btn btn-primary">Add</button>
+    </div>
+
+    <div id="contactsList" class="contacts"></div>
+  </aside>
+
+  <section class="glass chat-panel">
+    <div class="chat-particles" aria-hidden="true"></div>
+    <header class="chat-header">
+      <div class="chat-contact" id="chatContact">
+        <img id="activeAvatar" src="" alt="Contact" class="avatar" />
+        <div>
+          <h3 id="activeName">Select a conversation</h3>
+          <small id="activeStatus" class="muted">Offline</small>
+        </div>
+      </div>
+      <div class="call-actions">
+        <button id="audioCallBtn" class="icon-btn" title="Voice call">&#128222;</button>
+        <button id="videoCallBtn" class="icon-btn" title="Video call">&#128249;</button>
+      </div>
+      <div id="selectionBar" class="selection-bar hidden">
+        <span id="selectionCount">0 selected</span>
+        <button id="forwardSelectedBtn" class="icon-btn" title="Forward selected">&#8618;</button>
+        <button id="deleteSelectedBtn" class="icon-btn" title="Delete selected">&#128465;</button>
+        <button id="clearSelectionBtn" class="icon-btn" title="Clear selection">&#10005;</button>
+      </div>
+    </header>
+
+    <main id="messages" class="messages"></main>
+    <div id="dropZone" class="drop-zone hidden">Drop file to upload</div>
+
+    <div id="typingIndicator" class="typing-indicator hidden">
+      <span></span><span></span><span></span>
+      <small id="typingLabel" class="typing-label">Typing...</small>
+    </div>
+
+    <div id="replyPreview" class="reply-preview hidden"></div>
+    <div id="mediaPreview" class="media-preview hidden"></div>
+
+    <footer class="composer">
+      <button id="emojiBtn" class="icon-btn" title="Emoji">&#128522;</button>
+      <div id="emojiPicker" class="emoji-picker hidden"></div>
+
+      <button id="mediaBtn" class="icon-btn" title="Send media">&#128206;</button>
+      <input type="file" id="mediaInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.zip,.rar,.csv" hidden>
+      <button id="voiceBtn" class="icon-btn" title="Record voice">&#127897;</button>
+
+      <textarea id="messageInput" rows="1" placeholder="Type a message..."></textarea>
+      <button id="sendBtn" class="btn btn-primary">Send</button>
+    </footer>
+  </section>
+</div>
+
+<div id="lightbox" class="lightbox hidden">
+  <button id="lightboxClose" class="lightbox-close">&#10005;</button>
+  <img id="lightboxImg" src="" alt="Preview">
+</div>
+
+<div id="incomingCallPopup" class="call-popup hidden">
+  <div class="call-popup-card glass">
+    <h3 id="incomingCallerName">Incoming call</h3>
+    <p id="incomingCallType" class="muted">Video call</p>
+    <div class="call-popup-actions">
+      <button id="rejectCallBtn" class="btn call-reject">Reject</button>
+      <button id="acceptCallBtn" class="btn btn-primary">Accept</button>
+    </div>
+  </div>
+</div>
+
+<div id="callModal" class="call-modal hidden">
+  <div class="call-modal-inner glass">
+    <div class="call-topbar">
+      <div>
+        <h3 id="callPeerName">Call</h3>
+        <small id="callTimer">00:00</small>
+      </div>
+      <button id="endCallBtnTop" class="icon-btn" title="End call">&#10005;</button>
+    </div>
+    <div class="call-video-wrap">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <video id="localVideo" autoplay playsinline muted></video>
+    </div>
+    <div class="call-controls">
+      <button id="muteBtn" class="icon-btn" title="Mute">&#127908;</button>
+      <button id="camBtn" class="icon-btn" title="Camera on/off">&#128249;</button>
+      <button id="shareScreenBtn" class="icon-btn" title="Share screen">&#128187;</button>
+      <button id="endCallBtn" class="btn call-reject">End</button>
+    </div>
+  </div>
+</div>
+
+<audio id="notifyAudio" preload="auto"></audio>
+<script>
+  window.APP_ME = {{ me | tojson }};
+</script>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

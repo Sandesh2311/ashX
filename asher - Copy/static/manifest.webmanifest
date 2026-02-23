@@ -1,0 +1,18 @@
+﻿{
+  "name": "PulseChat",
+  "short_name": "PulseChat",
+  "start_url": "/chat",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d1326",
+  "theme_color": "#1b9aaa",
+  "description": "Realtime messaging with offline support",
+  "icons": [
+    {
+      "src": "/static/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
