@@ -10,7 +10,7 @@
 3. Configure:
    - Root Directory: `backend`
    - Build Command: `pip install -r requirements.txt`
-   - Start Command: `python app.py`
+   - Start Command: `gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app`
 4. Add env var:
    - `SECRET_KEY` = a long random string
 5. Deploy and copy backend URL, for example:
